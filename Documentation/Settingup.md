@@ -1,4 +1,11 @@
-### Basic Set-up
+## Basic Set-up
+
+Currently, SeaLegs is dependent on the Blazor.Extensions.Canvas NuGet package. Instructions on how to install and set-up BECanvas can be found [here](https://github.com/BlazorExtensions/Canvas). This package must be installed before continuing with SeaLegs.
+
+### BECanvas
+
+### SLDisplay Element
+
 The SLDisplay razor page is already set-up within the library to be implemented in any other razor page. In order to access this component, we simply include the <SLDisplay> tag in the razor page to begin rendering the canvas. Below is an example of the Home.razor page I set-up while building out this project:
 
 ### Home.razor
