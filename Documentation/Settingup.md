@@ -1,8 +1,8 @@
 ## Basic Set-up
 
-Currently, SeaLegs is dependent on the Blazor.Extensions.Canvas NuGet package. Instructions on how to install and set-up BECanvas can be found [here](https://github.com/BlazorExtensions/Canvas). This package must be installed before continuing with SeaLegs.
-
 ### BECanvas
+
+Currently, SeaLegs is dependent on the Blazor.Extensions.Canvas NuGet package. Instructions on how to install and set-up BECanvas can be found [here](https://github.com/BlazorExtensions/Canvas). This package must be installed before continuing with SeaLegs.
 
 ### SLDisplay Element
 
