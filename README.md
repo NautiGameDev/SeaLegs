@@ -92,12 +92,8 @@ namespace SeaLegsTestEnvironment.Game
 {
     public class App
     {
-
-       
-
         public App()
-        {
-            
+        {            
             CanvasController.SetCallback(this.Update);
         }
 
@@ -107,3 +103,13 @@ namespace SeaLegsTestEnvironment.Game
         }
     }
 ```
+
+We need to make sure this class has two things: An Update method(called every frame) and connecting that update method to the SeaLegs library. The update method needs to be asynchronous and return a Task, as well as take in a float as a parameter. This float is our deltaTime variable to ensure graphic movement and animations within the game are FPS independent. The next line we place in the constructor, which tells SeaLegs to call the new Update method each frame of the thread for our gameplay loop.
+
+```
+CanvasController.SetCallback(this.Update);
+```
+
+And that's it! Now you have a canvas on the screen ready to use for game development. All of the boiler plate code has been handled within the library.
+
+
