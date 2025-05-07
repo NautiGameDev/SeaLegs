@@ -1,6 +1,7 @@
 ﻿using System.Numerics;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
+using SeaLegs.Data;
 
 namespace SeaLegs.Controllers
 {
@@ -15,36 +16,36 @@ namespace SeaLegs.Controllers
             }
         }
 
-        //Most common draw method. Draw sprite at position with a given scale
-        public static async Task Draw(ElementReference sprite, Vector2 position, Vector2 scale)
+        //Most common draw method. Draw sprite at position with a given dimensions (Scales with canvas size)
+        public static async Task Draw(ElementReference sprite, Vector2 position, Vector2 dimensions)
         {
             if (CanvasController.context != null)
             {
-                await CanvasController.context.DrawImageAsync(sprite, position.X, position.Y, scale.X, scale.Y);
+                await CanvasController.context.DrawImageAsync(sprite, position.X, position.Y, dimensions.X * CanvasController.scale.X, dimensions.Y * CanvasController.scale.Y);
             }
         }
 
         //Draw sprite to screen from a sprite sheet. Useful for animated sprites where spritesheet is split into x and y indexes.
-        public static async Task Draw(ElementReference sprite, int animationIndexX, int animationIndexY, Vector2 scale, Vector2 position, Vector2 baseSpriteDimensions)
+        public static async Task Draw(ElementReference sprite, int animationIndexX, int animationIndexY, Vector2 dimensions, Vector2 position)
         {
             if (CanvasController.context != null)
             {
                 await CanvasController.context.DrawImageAsync(
                     sprite,
-                    animationIndexX * baseSpriteDimensions.X,
-                    animationIndexY * baseSpriteDimensions.Y,
-                    baseSpriteDimensions.X,
-                    baseSpriteDimensions.Y,
-                    position.X,
-                    position.Y,
-                    scale.X,
-                    scale.Y
+                    animationIndexX * dimensions.X,
+                    animationIndexY * dimensions.Y,
+                    dimensions.X,
+                    dimensions.Y,
+                    -((dimensions.X * CanvasController.scale.X) / 2),
+                    -((dimensions.Y * CanvasController.scale.Y) / 2),
+                    (dimensions.X * CanvasController.scale.X),
+                    (dimensions.Y * CanvasController.scale.Y)
                     );
             }
         }
 
         //Draws sprite to screen with rotation factored in. Used primarily for twin-stick shooter like mechanics.
-        public static async Task Draw(ElementReference sprite, int animationIndexX, int animationIndexY, Vector2 scale, Vector2 position, Vector2 baseSpriteDimensions, double rotation, Vector2 rotationOrigin)
+        public static async Task Draw(ElementReference sprite, int animationIndexX, int animationIndexY, Vector2 dimensions, Vector2 position, double rotation, Vector2 rotationOrigin)
         {
             if (CanvasController.context != null)
             {
@@ -53,48 +54,17 @@ namespace SeaLegs.Controllers
                 await CanvasController.context.RotateAsync((float)rotation);
                 await CanvasController.context.DrawImageAsync(
                     sprite,
-                    animationIndexX * baseSpriteDimensions.X,
-                    animationIndexY * baseSpriteDimensions.Y,
-                    baseSpriteDimensions.X,
-                    baseSpriteDimensions.Y,
-                    -(scale.X/2),
-                    -(scale.Y/2),
-                    scale.X,
-                    scale.Y
+                    animationIndexX * dimensions.X,
+                    animationIndexY * dimensions.Y,
+                    dimensions.X,
+                    dimensions.Y,
+                    -((dimensions.X * CanvasController.scale.X)/ 2),
+                    -((dimensions.Y * CanvasController.scale.Y)/ 2),
+                    (dimensions.X * CanvasController.scale.X),
+                    (dimensions.Y * CanvasController.scale.Y)
                     );
                 await CanvasController.context.RestoreAsync();
             }
-        }
-
-        public static async Task<ElementReference> LoadImage(string path)
-        {
-            try
-            {
-                if (CanvasController.JSModule != null)
-                {
-                    Console.WriteLine($"Attempting to load image from path: {path}");
-                    int imageId = await CanvasController.JSModule.InvokeAsync<int>("LoadImageAsElementReference", path, 1);
-                    Console.WriteLine("Image loaded");
-                    ElementReference newImage = await CanvasController.JSModule.InvokeAsync<ElementReference>("GetImageElementReference", imageId);
-                    
-                    return newImage;
-                }
-                else
-                {
-                    Console.WriteLine("JSModule not found");
-                    return default;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Error loading image: {ex.Message}");
-                Console.WriteLine($"Stack trace: {ex.StackTrace}");
-                if (ex.InnerException != null)
-                {
-                    Console.WriteLine($"Inner exception: {ex.InnerException.Message}");
-                }
-                return default;
-            }      
         }
 
         public static async Task DrawBlackBackground()
